@@ -2,7 +2,7 @@
   <div class="text_centered">
     <logo />
     <h1 class="title">
-      webapptodo
+      webapptodo - {{ user.name }}
     </h1>
     <h2 class="subtitle">
       This project was maded with Nuxt.js
@@ -35,7 +35,6 @@
       </b-button>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -44,6 +43,13 @@ import Logo from '~/components/Logo.vue'
 export default {
   components: {
     Logo
+  },
+  async asyncData () {
+    return {
+      user: {
+        name: 'Bruno Bevilaqua',
+      }
+    }
   }
 }
 </script>

@@ -2,7 +2,6 @@ const pkg = require('./package')
 
 module.exports = {
   mode: 'universal',
-
   /*
   ** Headers of the page
   */
@@ -48,6 +47,7 @@ module.exports = {
   ** Axios module configuration
   */
   axios: {
+    baseURL: 'http://localhost:3000'
     // See https://github.com/nuxt-community/axios-module#options
   },
 
@@ -59,7 +59,7 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-      
+
     }
   }
 }

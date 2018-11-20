@@ -1,35 +1,52 @@
 <template>
   <div>
     <div class="myNavbar">
-      <b-navbar type="dark" variant="primary" toggleable=" ">
-        <b-navbar-toggle target="nav_dropdown_collapse">
-        </b-navbar-toggle>
-        <b-collapse id="nav_dropdown_collapse" is-nav="">
+      <b-navbar type="dark" variant="primary" toggleable>
+        <b-navbar-toggle target="nav_dropdown_collapse"></b-navbar-toggle>
+        <b-collapse is-nav id="nav_dropdown_collapse">
           <b-navbar-nav>
-            <b-nav-item href="#">
-              Home
-            </b-nav-item>
-            <b-nav-item v-if="user.logged" href="#">
-              login
-            </b-nav-item>
-            <b-nav-item v-else="" href="#">
-              logoff
-            </b-nav-item>
-            <b-nav-item href="#">
-              Todos
-            </b-nav-item>
-            <b-nav-item href="#">
-              Authors
-            </b-nav-item>
+            <b-nav-item href="/">Home</b-nav-item>
+            <b-nav-item href="/login">login</b-nav-item>
+            <b-nav-item v-on:click="logout()">logout</b-nav-item>
+            <b-nav-item href="/todo">Todos</b-nav-item>
+            <b-nav-item href="/author">Authors</b-nav-item>
+            <b-nav-item href="/secure">Secure page</b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
     </div>
     <b-container>
-      <nuxt />
+      <b-row>
+        <b-col cols="2"></b-col>
+        <b-col>
+          <nuxt />
+        </b-col>
+        <b-col cols="2"></b-col>
+      </b-row>
     </b-container>
   </div>
 </template>
+
+<script>
+const Cookie = process.client ? require('js-cookie') : undefined
+
+export default {
+  methods: {
+    logout() {
+      var item = this;
+      this.$axios.setHeader('Authentication', this.$store.state.auth.token);
+      this.$axios.$get('/secure/logout').then(function (response) {
+        if (response.error == false) {
+          Cookie.remove('auth')
+          item.$store.commit('setAuth', null)
+        }else{
+          console.error(response.msg);
+        }
+      })
+    }
+  }
+}
+</script>
 
 <style>
 .myNavbar{
