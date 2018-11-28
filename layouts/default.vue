@@ -6,11 +6,11 @@
         <b-collapse is-nav id="nav_dropdown_collapse">
           <b-navbar-nav>
             <b-nav-item href="/">Home</b-nav-item>
-            <b-nav-item href="/login">login</b-nav-item>
-            <b-nav-item v-on:click="logout()">logout</b-nav-item>
-            <b-nav-item href="/todo">Todos</b-nav-item>
-            <b-nav-item href="/author">Authors</b-nav-item>
-            <b-nav-item href="/secure">Secure page</b-nav-item>
+            <b-nav-item v-show="!authUser" href="/login">login</b-nav-item>
+            <b-nav-item v-show="authUser" v-on:click="logout()">logout</b-nav-item>
+            <b-nav-item v-show="authUser" href="/todo">Todos</b-nav-item>
+            <b-nav-item v-show="authUser" href="/author">Authors</b-nav-item>
+            <b-nav-item v-show="authUser" href="/secure">Secure page</b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
@@ -31,6 +31,11 @@
 const Cookie = process.client ? require('js-cookie') : undefined
 
 export default {
+  data() {
+    return {
+      authUser: (this.$store.state.auth && this.$store.state.auth.token != '')? true : false
+    }
+  },
   methods: {
     logout() {
       var item = this;
@@ -39,6 +44,7 @@ export default {
         if (response.error == false) {
           Cookie.remove('auth')
           item.$store.commit('setAuth', null)
+          window.location.reload(true)
         }else{
           console.error(response.msg);
         }

@@ -59,6 +59,7 @@ export default {
           if (response.error == false) {
             item.$store.commit('setAuth', response.user) // mutating to store for client rendering
             Cookie.set('auth', response.user) // saving token in cookie for server rendering
+            window.location.reload(true)
           }
         });
 
