@@ -16,7 +16,7 @@ export default {
   middleware: 'authenticated',
   asyncData () {
     return {
-      fields: ['name', 'username', 'description',' birthday'],
+      fields: ['name', 'username', 'description','birthday'],
       authors:[{
           birthday: '',
           description: '',
