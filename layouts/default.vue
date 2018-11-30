@@ -9,7 +9,7 @@
             <b-nav-item v-show="!authUser" href="/login">login</b-nav-item>
             <b-nav-item v-show="authUser" v-on:click="logout()">logout</b-nav-item>
             <b-nav-item v-show="authUser" href="/todo">Todos</b-nav-item>
-            <b-nav-item v-show="authUser" href="/author">Authors</b-nav-item>
+            <b-nav-item v-show="authUser && admUser" href="/author">Authors</b-nav-item>
             <b-nav-item v-show="authUser" href="/secure">Secure page</b-nav-item>
           </b-navbar-nav>
         </b-collapse>
@@ -33,7 +33,8 @@ const Cookie = process.client ? require('js-cookie') : undefined
 export default {
   data() {
     return {
-      authUser: (this.$store.state.auth && this.$store.state.auth.token != '')? true : false
+      authUser: (this.$store.state.auth && this.$store.state.auth.token != '')? true : false,
+      admUser: (this.$store.state.auth && this.$store.state.auth.admin == true )? true : false,
     }
   },
   methods: {
