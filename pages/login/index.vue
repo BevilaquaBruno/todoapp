@@ -2,7 +2,7 @@
   <b-row>
     <b-col></b-col>
     <b-col cols="5">
-      <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+      <b-form @submit="onSubmit" @reset="onReset">
         <b-form-group id="username_group"
                       label="Username:"
                       label-for="username">
@@ -23,10 +23,17 @@
                         placeholder="Enter password">
           </b-form-input>
         </b-form-group>
-        <b-badge v-show="form.error == null">{{ form.error }}</b-badge>
-        <b-button type="submit" variant="primary">Submit</b-button>
-        <b-button type="reset" variant="danger">Reset</b-button>
-        <b-link href="/secure">Secure</b-link>
+        <div>
+          <b-button class="half_width" type="submit" size="md" variant="primary">Submit</b-button>
+          <b-button class="half_width right_align" type="reset" size="md" variant="danger">Reset</b-button>
+        </div>
+        <b-alert variant="danger"
+             dismissible
+             fade
+             :show="showDismissibleAlert"
+             @dismissed="showDismissibleAlert=false">
+      {{ error }}
+    </b-alert>
       </b-form>
     </b-col>
     <b-col></b-col>
@@ -41,43 +48,52 @@ export default {
   middleware: 'notAuthenticated',
   data () {
     return {
+      showDismissibleAlert: false,
+      error: '',
       form: {
         username: '',
         password: '',
-        error: null
-      },
-      show: true
+      }
     }
   },
   methods: {
     onSubmit (evt) {
       evt.preventDefault();
       try {
-        var item = this;
+        var i = this;
         this.$axios.$post('/secure/login', querystring.stringify({ username: this.form.username, password: this.form.password }))
         .then(function (response) {
           if (response.error == false) {
-            item.$store.commit('setAuth', response.user) // mutating to store for client rendering
-            Cookie.set('auth', response.user) // saving token in cookie for server rendering
+            i.$store.commit('setAuth', response.user)
+            Cookie.set('auth', response.user)
             window.location.reload(true)
+          }else if(response.error == true){
+            i.error = response.msg;
+            i.showDismissibleAlert = true;
           }
         });
 
         this.form.username = ''
         this.form.password = ''
-        this.form.error = null
       } catch (e) {
-        this.form.error = e.message
+        this.error = e.message
+        this.showDismissibleAlert = true;
       }
     },
     onReset (evt) {
       evt.preventDefault();
-      /* Reset our form values */
       this.form.username = '';
       this.form.password = '';
-      this.show = false;
-      this.$nextTick(() => { this.show = true });
     }
   }
 }
 </script>
+
+<style>
+.half_width{
+  width: 40%;
+}
+.right_align{
+  float: right;
+}
+</style>
