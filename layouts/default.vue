@@ -17,11 +17,11 @@
     </div>
     <b-container>
       <b-row>
-        <b-col cols="2"></b-col>
+        <b-col cols="1"></b-col>
         <b-col>
           <nuxt />
         </b-col>
-        <b-col cols="2"></b-col>
+        <b-col cols="1"></b-col>
       </b-row>
     </b-container>
   </div>
