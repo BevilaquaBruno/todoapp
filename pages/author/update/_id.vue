@@ -93,7 +93,10 @@ export default {
       this.$axios.get('/author/find/'+id).then(function (response) {
         if (response.data.error == false) {
           i.author = response.data.authors;
-
+          var d = new Date(response.data.authors.birthday);
+          i.author.birthday = d.getFullYear() + '-' +
+          (((d.getMonth() +1) < 10) ? '0'+(d.getMonth() +1) : (d.getMonth() +1)) + '-' +
+           (((d.getDate() +1) < 10) ? '0' + (d.getDate() +1) : (d.getDate() +1));
         }else if(response.data.error == true){
           alert(response.data.msg)
           document.getElementById('nuxtLinkBasic').click();
