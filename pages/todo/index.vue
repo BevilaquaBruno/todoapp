@@ -15,7 +15,7 @@
         </b-modal>
         <b-row>
           <b-col cols="6">
-            <nuxt-link to="/author/create">
+            <nuxt-link to="/todo/create">
               <b-button size="sm" class="mr-1" variant="success">
                 New
               </b-button>
@@ -33,9 +33,9 @@
           </b-col>
         </b-row>
 
-       <b-table @filtered="onFiltered" :filter="filter" :current-page=currentPage :per-page="perPage" striped hover responsive :items="authors" :fields="fields">
+       <b-table @filtered="onFiltered" :filter="filter" :current-page=currentPage :per-page="perPage" striped hover responsive :items="todos" :fields="fields">
          <template slot="actions" slot-scope="row">
-          <nuxt-link :to="{ path: '/author/update/'+row.item._id }">
+          <nuxt-link :to="{ path: '/todo/update/'+row.item._id }">
             <b-button size="sm" class="mr-1" variant="primary">
               Update
             </b-button>
@@ -81,38 +81,30 @@ export default {
         msg: ''
       },
       fields: {
-       name:{
-         label: 'name',
-         sortable: true
-       },
-       username:{
-         label:'username',
-         sortable: true
-       },
-       description:{
-         label: 'description',
-         sortable: false
-       },
-       birthday:{
-         label: 'birthday',
-         sortable: true
-       },
-       admin:{
-         label: 'admin',
-         sortable: true
-       },
-       actions:{
-         label: 'actions',
-         sortable: false
-       }
+        name:{
+          label: 'name',
+          sortable: true
+        },
+        author:{
+          label: 'author',
+          sortable: true,
+          key: 'author.name'
+        },
+        done:{
+          label: 'done',
+          sortable: true
+        },
+        actions:{
+          label: 'action',
+          sortable: false
+        }
       },
-      authors:[{
-          birthday: '',
-          description: '',
-          _id: '',
+      todos:[{
           name: '',
-          username: '',
-          admin: ''
+          done: '',
+          _id: '',
+          description: '',
+          author: [{}]
       }],
       confirmModal:{
         msg: '',
@@ -145,27 +137,21 @@ export default {
       this.totalRows = filteredItems.length
       this.currentPage = 1
     },
-    fetchAuthors(){
+    fetchTodos(){
       var i = this;
       i.$axios.setHeader('Authentication', this.$store.state.auth.token);
-      this.$axios.get('/author').then(function (response) {
+      this.$axios.get('/todo').then(function (response) {
         if (response.data.error == true) {
           alert(response.data.msg)
         }else{
-          response.data.authors.forEach(element => {
-            var d = new Date(element.birthday)
-            element.birthday = ( ((d.getDate() + 1) < 10 ) ? '0'+(d.getDate()+1) : (d.getDate() +1) ) + '/' +
-              ( ((d.getMonth()+1) < 10 ) ? '0'+(d.getMonth()+1) : (d.getMonth()+1) ) + '/' +
-              d.getFullYear()
-          });
-          i.totalRows = response.data.authors.length;
-          i.authors = response.data.authors;
+          i.totalRows = response.data.todos.length;
+          i.todos = response.data.todos;
         }
       });;
     },
     deleteItem (index, item) {
       this.confirmModal._id = item._id;
-      this.confirmModal.msg = 'Do You want to delete the author '+ item.name + '?';
+      this.confirmModal.msg = 'Do You want to delete the todo '+ item.name + '?';
       this.confirmModal.show = true;
     },
     resetConfirmModal(){
@@ -176,9 +162,9 @@ export default {
     confirmYes(){
       var i = this;
       i.$axios.setHeader('Authentication', this.$store.state.auth.token);
-      this.$axios.delete('/author/delete/'+i.confirmModal._id).then(function (response) {
+      this.$axios.delete('/todo/delete/'+i.confirmModal._id).then(function (response) {
         if (response.data.error == false) {
-          i.fetchAuthors();
+          i.fetchTodos();
           i.resetConfirmModal();
           i.alert.msg = response.data.msg;
           i.showAlert();
@@ -190,7 +176,7 @@ export default {
     }
   },
   mounted(){
-    this.fetchAuthors();
+    this.fetchTodos();
   }
 }
 </script>
