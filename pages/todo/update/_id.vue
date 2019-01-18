@@ -50,7 +50,7 @@ export default {
       todo:{
         _id: params.id,
         name: '',
-        done: 'false',
+        done: false,
         author: '',
         description: ''
       },
@@ -62,7 +62,7 @@ export default {
       if (newVal == 'true') {
         this.doneOrNot = 'Done !';
       }else if (newVal == 'false'){
-        this.doneOrNot = 'Not Done !';
+        this.doneOrNot = 'Not done !';
       }
     }
   },
@@ -77,8 +77,11 @@ export default {
       this.$axios.get('/todo/find/'+id).then(function (response) {
         if (response.data.error == false) {
           i.todo = response.data.todos;
-          i.todo.done = !response.data.todos.done;
-          document.getElementById('done').click();
+          if (i.todo.done == true) {
+            i.doneOrNot = 'Done !';
+          }else if (i.todo.done == false){
+            i.doneOrNot = 'Not done !';
+          }
         }else if(response.data.error == true){
           alert(response.data.msg)
           document.getElementById('nuxtLinkBasic').click();

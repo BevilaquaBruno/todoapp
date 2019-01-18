@@ -10,7 +10,7 @@
             <b-nav-item v-show="authUser" v-on:click="logout()">logout</b-nav-item>
             <b-nav-item v-show="authUser" href="/todo">Todos</b-nav-item>
             <b-nav-item v-show="authUser && admUser" href="/author">Authors</b-nav-item>
-            <b-nav-item v-show="authUser" href="/secure">Secure page</b-nav-item>
+            <b-nav-item href="/post">Todos List</b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
